@@ -59,7 +59,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v2
         with:
-          path: ~/.cache/pypoetry/virtualenvs
+          path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
