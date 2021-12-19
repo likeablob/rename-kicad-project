@@ -1,0 +1,78 @@
+[tool.poetry]
+authors = ["likeablob <46628917+likeablob@users.noreply.github.com>"]
+description = "A nifty tool for renaming or cloning your KiCad project."
+homepage = "https://github.com/likeablob/rename-kicad-project"
+keywords = ["kicad"]
+license = "MIT"
+name = "rename-kicad-project"
+readme = "README.md"
+repository = "https://github.com/likeablob/rename-kicad-project.git"
+version = "1.0.0-rc.1"
+
+[tool.poetry.dependencies]
+pyproject-flake8 = "^0.0.1-alpha.2"
+python = "^3.7"
+rich = "^10.16.0"
+typer = {extras = ["all"], version = "^0.4.0"}
+typing-extensions = "^4.0.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^21.12b0", allow-prereleases = true}
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+poethepoet = "^0.11.0"
+pyproject-flake8 = "^0.0.1-alpha.2"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.6.1"
+pytest-watch = "^4.2.0"
+tox = "^3.24.4"
+tox-poetry-installer = {extras = ["poetry"], version = "^0.8.2"}
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.poetry.scripts]
+rename-kicad-project = "rename_kicad_project.cli:app"
+
+[tool.flake8]
+exclude = ".git,__pycache__,docs/source/conf.py,old,build,dist,.venv,.tox"
+extend-ignore = "E203,"
+max-complexity = 10
+max-line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.poe.tasks]
+ci = [
+  "format:check",
+  "lint",
+  "test:cov",
+]
+lint = "pflake8 ."
+style = "black ."
+"style:check" = "black . --check --diff"
+"test" = "pytest tests --cov=rename_kicad_project"
+"test:watch" = "ptw tests src -- -svvx"
+"types" = "npx -y pyright@1.1.197"
+
+[tool.pyright]
+exclude = [
+  "**/node_modules",
+  "**/__pycache__",
+  "src/experimental",
+  "src/typestubs",
+]
+ignore = []
+include = ["src", "tests"]
+stubPath = "src/stubs"
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+executionEnvironments = [
+  {root = "src"},
+  {root = "tests"},
+]
