@@ -49,7 +49,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [Ubuntu, MacOS, Windows]
+        os: [ubuntu, macos, windows]
         python-version: ['3.7','3.8','3.9','3.10']
 
     steps:
@@ -59,7 +59,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v2
         with:
-          path: ~/.cache/pypoetry/virtualenvs
+          path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
@@ -74,11 +74,25 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run poe test
+        run: poetry run poe test --cov-report=xml --cov-report term-missing | tee pytest-coverage.txt
 
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu' && matrix.python-version == '3.7'
+        uses: codecov/codecov-action@v2
+        with:
+          env_vars: RUNNER_OS
+          files: ./coverage.xml
+          fail_ci_if_error: true
+
+      - name: Comment coverage
+        if: matrix.os == 'ubuntu' && matrix.python-version == '3.7'
+        uses: coroo/pytest-coverage-commentator@v1.0.2
 
   build-release:
     runs-on: ubuntu-latest
+    needs:
+      - code-style
+      - run-tests
 
     steps:
       - uses: actions/checkout@v2
@@ -100,3 +114,9 @@ jobs:
         run: poetry publish -n
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.pypi }}
+
+      - name: Archive build products
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist/
