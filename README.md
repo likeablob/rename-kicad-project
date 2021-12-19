@@ -2,6 +2,7 @@
 [![PyPI version](https://badge.fury.io/py/rename-kicad-project.svg)](https://badge.fury.io/py/rename-kicad-project)
 [![PyPI Supported Python Versions](https://img.shields.io/pypi/pyversions/rename-kicad-project.svg)](https://pypi.python.org/pypi/rename-kicad-project/)
 [![CI](https://github.com/likeablob/rename-kicad-project/actions/workflows/ci.yml/badge.svg)](https://github.com/likeablob/rename-kicad-project/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/likeablob/rename-kicad-project/branch/main/graph/badge.svg)](https://codecov.io/gh/likeablob/rename-kicad-project)
 
 **rename-kicad-project** is a nifty tool for renaming or cloning your KiCad (v4, v5) project.
 
