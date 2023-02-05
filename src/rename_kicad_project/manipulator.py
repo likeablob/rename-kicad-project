@@ -41,12 +41,14 @@ class Manipulator:
     def list_target_files(self, src_dir: Path):
         project_file = next(src_dir.glob("*.pro"), None)
         if project_file is None:
+            project_file = next(src_dir.glob("*.kicad_pro"), None)
+        if project_file is None:
             return self.panic("Error: .pro file is not found.")
 
         project_name = project_file.stem
 
         return project_name, list(src_dir.glob(f"{project_name}.*")) + [
-            src_dir / x for x in KICAD_SPECIAL_FILES
+            src_dir / x for x in KICAD_SPECIAL_FILES if (src_dir / x).exists()
         ]
 
     def _with_stem(self, path: Path, stem: str):
