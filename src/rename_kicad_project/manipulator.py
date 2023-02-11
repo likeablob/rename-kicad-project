@@ -39,11 +39,11 @@ class Manipulator:
             copyfile(src, dest)
 
     def list_target_files(self, src_dir: Path):
-        project_file = next(src_dir.glob("*.pro"), None)
+        project_file = next(src_dir.glob("*.pro"), None) or next(
+            src_dir.glob("*.kicad_pro"), None
+        )
         if project_file is None:
-            project_file = next(src_dir.glob("*.kicad_pro"), None)
-        if project_file is None:
-            return self.panic("Error: .pro file is not found.")
+            return self.panic("Error: .pro  or .kicad_pro file is not found.")
 
         project_name = project_file.stem
 

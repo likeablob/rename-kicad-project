@@ -6,6 +6,8 @@
 
 **rename-kicad-project** is a nifty tool for renaming or cloning your KiCad (v4, v5) project.
 
+## NOTE: From KiCad v6, renaming/cloning has been officially supported. Try `File -> Save As...`.
+
 ## Install
 ```sh
 python3 -m pip install --user rename-kicad-project

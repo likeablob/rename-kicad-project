@@ -6,7 +6,7 @@ from pytest_mock import MockerFixture
 from utils.fake_project import FAKE_PROJECT_NAME, FakeProject
 
 from rename_kicad_project.cli import Manipulator
-from rename_kicad_project.manipulator import ManipulatorFatalError
+from rename_kicad_project.manipulator import KICAD_SPECIAL_FILES, ManipulatorFatalError
 
 
 @pytest.fixture()
@@ -101,6 +101,37 @@ def test_list_target_files__only_returns_project_files(
     project_dir, project_files = fake_project
     unrelated_file = project_dir / "unrelated_file.txt"
     unrelated_file.touch()
+
+    # Execution
+    project_name, target_files = instance.list_target_files(project_dir)
+
+    # Assertion
+    assert project_name == FAKE_PROJECT_NAME
+    assert sorted(target_files) == sorted(project_files)
+
+
+def test_list_target_files__detects_v6_project(
+    instance: Manipulator, fake_project_v6: FakeProject
+):
+    # Preparation
+    project_dir, project_files = fake_project_v6
+
+    # Execution
+    project_name, target_files = instance.list_target_files(project_dir)
+
+    # Assertion
+    assert project_name == FAKE_PROJECT_NAME
+    assert sorted(target_files) == sorted(project_files)
+
+
+def test_list_target_files__skips_missing_special_file(
+    instance: Manipulator, fake_project: FakeProject
+):
+    # Preparation
+    project_dir, project_files = fake_project
+    special_file = project_dir / KICAD_SPECIAL_FILES[0]
+    special_file.unlink()
+    project_files.remove(special_file)
 
     # Execution
     project_name, target_files = instance.list_target_files(project_dir)
